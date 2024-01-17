@@ -47,3 +47,56 @@ The program prompts the user to enter a SMILES string.
 The entered SMILES string is read from the standard input.
 The makePredictionRequest function is called with the API URL and the entered SMILES string to make the prediction request and save the returned image.
 Overall, this Go application serves as a client that sends a SMILES string to a Flask API, which performs lipophilicity prediction and molecule image generation. The Go application then saves the returned image locally. This allows users to interact with the Flask API through a simple command-line interface.
+
+## The Complete workflow
+The complete application comprises two main components: a Flask-based backend and a Go-based frontend. Together, they provide a system for predicting properties of molecules based on their SMILES (Simplified Molecular Input Line Entry System) strings and retrieving corresponding molecular images. Here's a summary of the entire application:
+
+Flask Backend (Python):
+Flask Web Server:
+
+A Flask server is set up to handle HTTP requests.
+The server listens on port 5000 and is run in debug mode for development purposes.
+OpenVINO Machine Learning Model:
+
+The application loads an OpenVINO model, presumably for predicting molecular properties like lipophilicity.
+SMILES to Fingerprint Conversion:
+
+A function (smiles_to_fp) converts SMILES strings to molecular fingerprints, which are numerical representations suitable for machine learning predictions.
+Molecule Image Generation:
+
+Another function (mol_to_image) generates an image of the molecule from its SMILES string. This is done by creating a temporary image file, reading it into a BytesIO object, and then deleting the file.
+API Endpoint /predict:
+
+The Flask app exposes an endpoint (/predict) that accepts POST requests with JSON data containing a SMILES string.
+The endpoint processes the input to perform a prediction using the OpenVINO model and generates a corresponding molecule image.
+The response includes the prediction and the molecule image.
+Go Frontend (Go):
+User Input Handling:
+
+The Go application runs on the command line.
+It prompts the user to input a SMILES string.
+API Communication:
+
+The application constructs a JSON payload with the SMILES string and sends it to the Flask API's /predict endpoint.
+Image Retrieval and Saving:
+
+It assumes the Flask API responds with an image file (the generated molecule image).
+The Go app saves this image to the local file system with the name molecule_image.png.
+Error Handling:
+
+The application includes basic error handling for network requests, file operations, and JSON encoding.
+Workflow of the Complete App:
+User Interaction:
+
+The user enters a SMILES string in the Go application running in the command line.
+Request Handling:
+
+The Go app sends this SMILES string to the Flask backend.
+Processing:
+
+The Flask app processes this request: it converts the SMILES string to a molecular fingerprint, uses the OpenVINO model to predict properties, and generates an image of the molecule.
+Response and Output:
+
+The Flask app sends the molecule image back to the Go application.
+The Go app saves the image locally and notifies the user.
+This setup allows users to easily interact with a sophisticated backend (Flask with OpenVINO and RDKit) for molecular property prediction and visualization, through a simple command-line interface provided by the Go application.
